@@ -5,7 +5,7 @@
         http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" version="1.0">
 
     <!-- JPA test "unit" -->
-    <persistence-unit name="testUnit" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="realUnit" transaction-type="RESOURCE_LOCAL">
             <provider>
             org.apache.openjpa.persistence.PersistenceProviderImpl
         </provider>
@@ -19,6 +19,20 @@
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='add,deleteTableContents')" />
         </properties>
     </persistence-unit>
-    
+    <!-- JPA test "unit" -->
+    <persistence-unit name="testUnit" transaction-type="RESOURCE_LOCAL">
+            <provider>
+            org.apache.openjpa.persistence.PersistenceProviderImpl
+        </provider>
+                <class>com.affiini.meta.CompositeKeyEntity</class>
+        <properties>
+	        <property name="openjpa.jdbc.DBDictionary" value="hsql" />
+	        <property name="openjpa.ConnectionDriverName" value="org.hsqldb.jdbcDriver" />
+	        <property name="openjpa.ConnectionURL" value="jdbc:hsqldb:mem:test" />
+	        <property name="openjpa.ConnectionUserName" value="sa" />
+	        <property name="openjpa.ConnectionPassword" value="" />
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='add,deleteTableContents')" />
+        </properties>
+    </persistence-unit>    
 
 </persistence>

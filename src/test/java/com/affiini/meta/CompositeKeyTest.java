@@ -23,7 +23,7 @@ public class CompositeKeyTest {
 	}
 
 	@Test
-	public void testCompositeCreate() throws Exception {
+	public void testCompositeCreate() {
 		final Dao dao = injector.getInstance(Dao.class);
 		dao.create("a", "b");
 		CompositeKeyEntity c = dao.findByText("a", "b");

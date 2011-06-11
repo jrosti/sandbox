@@ -3,7 +3,7 @@
          xsi:schemaLocation="http:/java.sun.com/dtd/web-app_2_3.dtd">
   <servlet>
     <servlet-name>meta</servlet-name>
-    <servlet-class>com.affiini.scala.ScalaServlet</servlet-class>
+    <servlet-class>com.affiini.scala.HelloScalaServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

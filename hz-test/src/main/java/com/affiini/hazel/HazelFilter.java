@@ -9,10 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 public class HazelFilter implements Filter {
 
+	private static final Logger log = LoggerFactory.getLogger(HazelFilter.class);
 	@Inject
 	public HazelFilter() {
 	}
@@ -20,6 +24,7 @@ public class HazelFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
+		log.info("processing " + req.getScheme());
 		chain.doFilter(req, resp);
 	}
 

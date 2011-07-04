@@ -9,8 +9,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import com.google.inject.Inject;
+
 public class HazelFilter implements Filter {
 
+	@Inject
 	public HazelFilter() {
 	}
 	

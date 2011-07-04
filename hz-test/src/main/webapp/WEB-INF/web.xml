@@ -16,6 +16,6 @@
   </filter-mapping>
   
   <listener>
-  	<listener-class>com.affiini.HazelCastServletConfig</listener-class>
+  	<listener-class>com.affiini.hazel.HazelCastServletConfig</listener-class>
   </listener>
 </web-app>

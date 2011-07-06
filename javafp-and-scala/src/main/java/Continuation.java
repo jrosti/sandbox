@@ -46,19 +46,19 @@ public class Continuation {
 		}; 
 	}
 	
-	public static Integer faccps(Function<Integer, Integer> continuation, Integer n) {
+	public static Integer xyzcps(Function<Integer, Integer> continuation, Integer n) {
 		if (n == 0) return continuation.apply(1);
-		return faccps(times().apply(continuation.apply(n)), n-1);
+		return xyzcps(times().apply(continuation.apply(n)), n-1);
 	}
 	
-	public static Integer fac(Integer a) {
-		return faccps(id(a) , a);
+	public static Integer xyz(Integer a) {
+		return xyzcps(id(a) , a);
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(curry(times(), 1, 2, 3, 4, 5));
+		System.out.println(curry(times(), 3, 4, 5));
 		// 
-		System.out.println(fac(5));
+		System.out.println(xyz(5));
 	}
 
 	public static Integer curry(Function<Function<Integer, Integer>, Integer> op, Integer ... args) {

@@ -1,3 +1,6 @@
+import sun.java2d.SunGraphicsEnvironment;
+
+import javax.management.relation.RelationSupport;
 import java.util.Stack;
 
 public class Continuation {
@@ -9,27 +12,43 @@ public class Continuation {
 	interface BinOp<T> {
 		T apply(T a, T b);
 	}
-	
-	static Function<Function<Integer, Integer>, Integer> op(final BinOp<Integer> op) {
-		
-		return new Function<Function<Integer, Integer>, Integer>() {
-			
+
+    interface CurriedFunction<T> extends Function<Function<T, T>, T> {};
+
+	static <T> CurriedFunction<T> op(final BinOp<T> op) {
+
+		return new CurriedFunction<T>() {
+
 			@Override
-			public Function<Integer, Integer> apply(final Integer left) {
-				return new Function<Integer, Integer>() {
-					
+			public Function<T, T> apply(final T left) {
+				return new Function<T, T>() {
+
 					@Override
-					public Integer apply(Integer right) {
+					public T apply(T right) {
 						return op.apply(left, right);
 					}
 				};
 			}
 		};
 	}
-	
-	static Function<Function<Integer, Integer>, Integer> times() {
+
+    static <T> Function<T,T> partial(CurriedFunction<T> op, T arg) {
+        return op.apply(arg);
+    }
+
+    public static <T> T curry(CurriedFunction<T> op, T ... args) {
+        T result = null;
+        Function<T, T> f = partial(op, args[0]);
+        for (int i = 1; i < args.length; i++) {
+            result = f.apply(args[i]);
+            f = partial(op, result);
+        };
+        return result;
+    }
+
+	static CurriedFunction<Integer> times() {
 		return op(new BinOp<Integer>() {
-			
+
 			@Override
 			public Integer apply(Integer a, Integer b) {
 				return a*b;
@@ -37,41 +56,37 @@ public class Continuation {
 		});
 	}
 
+    static CurriedFunction<Integer> minus() {
+        return op(new BinOp<Integer>() {
+            @Override
+            public Integer apply(Integer a, Integer b) {
+                return a - b;
+            }
+        });
+    }
+
 	static <T> Function<T, T> id(T a) {
 		return new Function<T, T>() {
 			@Override
 			public T apply(T v) {
 				return v;
 			}
-		}; 
-	}
-	
-	public static Integer xyzcps(Function<Integer, Integer> continuation, Integer n) {
-		if (n == 0) return continuation.apply(1);
-		return xyzcps(times().apply(continuation.apply(n)), n-1);
-	}
-	
-	public static Integer xyz(Integer a) {
-		return xyzcps(id(a) , a);
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(curry(times(), 3, 4, 5));
-		// 
-		System.out.println(xyz(5));
+		};
 	}
 
-	public static Integer curry(Function<Function<Integer, Integer>, Integer> op, Integer ... args) {
-		Stack<Integer> argList = new Stack<Integer>();
-		for  (Integer arg : args) {
-			argList.push(arg);
-		}
-		Integer res = argList.pop();
-		do {
-			Function<Integer, Integer> f = op.apply(res);
-			res = f.apply(argList.pop());
-		} while(! argList.isEmpty());
-		return res; 
+	public static Integer xyzcps(Function<Integer, Integer> continuation, Integer n) {
+		if (n == 0) return continuation.apply(1);
+		return xyzcps(partial(times(), continuation.apply(n)), curry(minus(), n, 1));
+	}
+
+	public static Integer xyz(Integer a) {
+		return xyzcps(id(a), a);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(curry(minus(), 3,1,2,3));
+		//
+		System.out.println(xyz(5));
 	}
 }
 

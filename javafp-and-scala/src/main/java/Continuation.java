@@ -70,19 +70,19 @@ public class Continuation {
         };
     }
 
-    public static Integer xyzcps(Function<Integer, Integer> continuation, Integer n) {
+    static Integer continuationPassingFactorial(Function<Integer, Integer> continuation, Integer n) {
         if (n == 0) return continuation.apply(1);
-        return xyzcps(partial(times(), continuation.apply(n)), curry(minus(), n, 1));
+        return continuationPassingFactorial(partial(times(), continuation.apply(n)), curry(minus(), n, 1));
     }
 
-    public static Integer xyz(Integer a) {
-        return xyzcps(id(a), a);
+    static Integer factorial(Integer a) {
+        return continuationPassingFactorial(id(a), a);
     }
 
     public static void main(String[] args) {
         System.out.println(curry(minus(), 3, 1, 2, 3));
         //
-        System.out.println(xyz(5));
+        System.out.println(factorial(5));
     }
 }
 

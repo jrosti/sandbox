@@ -15,23 +15,27 @@ class Coder(words: List[String]) {
     
   private val wordsForNum: Map[String, Seq[String]] = (words groupBy wordCode) withDefaultValue List()
   
-  def encode(number: String): Set[List[String]] = 
-    if (number.isEmpty()) Set(List())
+  def encode(number: String): List[List[String]] = 
+    if (number.isEmpty()) List(List())
     else {
       for {
         split <- 1 to number.length
         word <- wordsForNum(number take split)
         rest <- encode(number drop split)
       } yield word :: rest
-    }.toSet
+    }.toList
     
-  def translate(number: String): Set[String] = encode(number) map (_ mkString " ") 
 }
 
 object Phonecode extends App {
-  val dict = io.Source.fromFile("/usr/share/dict/words")
+  val start = System.currentTimeMillis()
+  val dict = io.Source.fromFile("../haskell/testwords")
      .getLines.filter(_.length > 1).filter(_.matches("[a-zA-Z]+")).toList  
-  val coder = new Coder("Scala" :: "rocks" :: dict)
-  println(coder.translate("7225276257"))
+  val coder = new Coder(dict)
+  println("Using " + dict.length + " words.")
+  println("Found " + coder.encode("222667542489").length + " solutions.")
+  val stop = System.currentTimeMillis()
+  stop - start
+  println("Time " + ((stop - start)/1000.0) + "s")
 }
 

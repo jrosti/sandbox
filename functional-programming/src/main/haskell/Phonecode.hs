@@ -1,6 +1,6 @@
 
 import Prelude hiding (lookup)
-import Data.Map hiding (map, filter)
+import Data.HashMap hiding (map, filter)
 import Data.Maybe
 import Data.Char
 import Data.Time.Clock

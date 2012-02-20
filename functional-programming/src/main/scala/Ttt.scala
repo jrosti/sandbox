@@ -78,7 +78,7 @@ object TicTacToe extends App {
   val start = System.currentTimeMillis
   val gtree = gameTree(new Board)
   val gtreeCreated = System.currentTimeMillis
-  val board = new Board
+
   if (maximize( gtree ) == 0) println ("Game is a draw.")
   val stop = System.currentTimeMillis
   

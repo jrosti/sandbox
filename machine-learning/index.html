@@ -22,42 +22,36 @@
                        [0.5, 0.5]];
     var states = 2;
 
-    function viterbiProcessor(inProb, obFn) {
-        var path = [[0], [1]];
-        var viterbi = [inProb[0] * obFn(0, 0), inProb[1] * obFn(0, 1)];
-
-        return function(observation) {
-            var newPath = [];
-            for (var j = 0; j < states; j = j + 1) {
-                var highestProbability = -1, survivorState = -1;
-                for (var i = 0; i < states ; i = i + 1) {
-                    var probability = viterbi[i] * transitions[i][j] * obFn(observation, j);
-                    if (probability > highestProbability) {
-                        survivorState = i;
-                        highestProbability = probability;
-                    }
-                }
-
-                viterbi[j] = highestProbability;
-                newPath[j] = path[survivorState].slice();
-                newPath[j].push(j);
-            }
-            path = newPath;
-            return {trellis: newPath, viterbi: viterbi};
-        }
+    function obFn(observation, j) {
+        return 0.3;
     }
 
-    $(document).ready(function() {
-        var obFn = function(observation, state) {
-            var omap = [[0.2, 0.8], [0.5, 0.5]];
-            return omap[observation][state];
+    function viterbi(accumulator, observation) {
+        console.log(observation, + "+++" + accumulator);
+        var newPath = [];
+        for (var j = 0; j < states; j = j + 1) {
+            var highestProbability = -1, survivorState = -1;
+            for (var i = 0; i < states ; i = i + 1) {
+                var probability = accumulator.viterbi[i] * transitions[i][j] * obFn(observation, j);
+                if (probability > highestProbability) {
+                    survivorState = i;
+                    highestProbability = probability;
+                }
+            }
+            accumulator.viterbi[j] = highestProbability;
+            newPath[j] = accumulator.path[survivorState].slice();
+            newPath[j].push(j);
         }
-        var viterbi = viterbiProcessor([0.5, 0.5], obFn);
+        return {path: newPath, viterbi: accumulator.viterbi};
+    }
+
+
+    $(document).ready(function() {
         var keyPresses = $('#input')
                 .asEventStream('keyup')
                 .map('.keyCode')
                 .map(dec65)
-                .map(viterbi);
+                .scan({path: [[0], [1]], viterbi: [0.3, 0.3]}, viterbi);
         keyPresses.log();
     });
 

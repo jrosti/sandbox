@@ -1,0 +1,67 @@
+<html>
+<head>
+</head>
+<body>
+<div>
+    <p>
+        <label for="input">Syöte</label>
+        <input type="text"  size="100" maxlength="150" id="input">
+        <span id="output" />
+    </p>
+</div>
+
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.0/Bacon.min.js"></script>
+<script type='text/javascript'>
+    function dec65(val) {
+        return val - 65;
+    }
+
+    var transitions = [[0.5, 0.5],
+                       [0.5, 0.5]];
+    var states = 2;
+
+    function viterbiProcessor(inProb, obFn) {
+        var path = [[0], [1]];
+        var viterbi = [inProb[0] * obFn(0, 0), inProb[1] * obFn(0, 1)];
+
+        return function(observation) {
+            var newPath = [];
+            for (var j = 0; j < states; j = j + 1) {
+                var highestProbability = -1, survivorState = -1;
+                for (var i = 0; i < states ; i = i + 1) {
+                    var probability = viterbi[i] * transitions[i][j] * obFn(observation, j);
+                    if (probability > highestProbability) {
+                        survivorState = i;
+                        highestProbability = probability;
+                    }
+                }
+
+                viterbi[j] = highestProbability;
+                newPath[j] = path[survivorState].slice();
+                newPath[j].push(j);
+            }
+            path = newPath;
+            return {trellis: newPath, viterbi: viterbi};
+        }
+    }
+
+    $(document).ready(function() {
+        var obFn = function(observation, state) {
+            var omap = [[0.2, 0.8], [0.5, 0.5]];
+            return omap[observation][state];
+        }
+        var viterbi = viterbiProcessor([0.5, 0.5], obFn);
+        var keyPresses = $('#input')
+                .asEventStream('keyup')
+                .map('.keyCode')
+                .map(dec65)
+                .map(viterbi);
+        keyPresses.log();
+    });
+
+
+</script>
+</html>
+

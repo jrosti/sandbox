@@ -1,6 +1,6 @@
 
 import Prelude hiding (lookup)
-import Data.HashMap hiding (map, filter)
+import Data.Map hiding (map, filter)
 import Data.Maybe
 import Data.Char
 import Data.Time.Clock
@@ -27,7 +27,7 @@ encode wordList code = [ word : rest | i <- [1.. length code]
 main = do 
 	t1 <- getCurrentTime
 	str <- readFile "testwords"
-	let words = filter (and . map isAlpha) $ filter ((>1) . length) $ lines str
+	let words = filter (and . map isAlpha) $ filter ((>1) . length) $ lines str
 	let solutions = encode words "222667542489"
 	putStrLn $ "Using dictionary with " ++ show (length words) ++ " words." 
 	putStrLn $ "Counted " ++ show (length solutions) ++ " solutions."

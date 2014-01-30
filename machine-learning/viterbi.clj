@@ -4,12 +4,13 @@
    [0.1 0.7 0.2]])
 
 (defn observation-fn
-  [state token]
+  [observation state]
   0.3333)
 
 (def states 3)
 
-(defn viterbi [accumulator observation]
+(defn viterbi 
+  [accumulator observation]
   (loop [next 0 new-viterbi [] new-path []]
     (if (= source states) 
       {:path new-path :viterbi new-viterbi}

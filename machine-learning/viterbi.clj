@@ -21,4 +21,6 @@
             best (apply min-key second candidates)]
         (recur (inc source) 
                (conj newViterbi (second best))
-               (conj ((:path accumulator) (first best)) next))))))
+               (conj newPath 
+                     (conj ((:path accumulator) (first best)) next)))))))
+

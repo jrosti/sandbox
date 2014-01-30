@@ -10,9 +10,9 @@
 (def states 3)
 
 (defn viterbi [accumulator observation]
-  (loop [next 0 newViterbi [] newPath []]
+  (loop [next 0 new-viterbi [] new-path []]
     (if (= source states) 
-      {:path newPath :viterbi newViterbi}
+      {:path new-path :viterbi new-viterbi}
       (let [candidates (map-indexed (fn [source]
                                         (* ((:viterbi accumulator) source) 
                                            (get-in transitions [source next])
@@ -20,7 +20,7 @@
                                     (range states))
             best (apply min-key second candidates)]
         (recur (inc source) 
-               (conj newViterbi (second best))
-               (conj newPath 
+               (conj new-viterbi (second best))
+               (conj new-path 
                      (conj ((:path accumulator) (first best)) next)))))))
 

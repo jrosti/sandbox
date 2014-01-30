@@ -18,9 +18,9 @@
                                            (get-in transitions [source next])
                                            (observation-fn observation next)))
                                     (range states))
-            best (apply min-key second candidates)]
+            survivor (apply min-key second candidates)]
         (recur (inc source) 
-               (conj new-viterbi (second best))
+               (conj new-viterbi (second survivor))
                (conj new-path 
-                     (conj ((:path accumulator) (first best)) next)))))))
+                     (conj ((:path accumulator) (first survivor)) next)))))))
 

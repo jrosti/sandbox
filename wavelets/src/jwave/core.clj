@@ -25,16 +25,10 @@
 (def haar-wpt
   (wpt (Haar02.)))
 
-(defn to-2d-double 
-  [coll]
-  (into-array (map double-array coll)))
-
-(defn forward 
-  [ftw double-arr]
+(defn forward [ftw double-arr]
   (.forward ftw double-arr))
 
-(defn forward-wpt
-  [wpt double-arr]
+(defn forward-wpt [wpt double-arr]
   (.forward wpt double-arr))
 
 (def haar-forward
@@ -43,8 +37,7 @@
 (def haar-wpt-forward 
   (partial forward-wpt haar-wpt))
 
-(defn read-buffered-image 
-  [filename]
+(defn read-buffered-image [^String filename]
   (ImageIO/read (File. filename)))
 
 (defn rgb-to-double [rgb]
@@ -53,8 +46,7 @@
         b (bit-and rgb 255)]
     (mapv (fn [v] (/ (double v) 255.0)) [r g b])))
 
-(defn intensity
-  [buffered-image]
+(defn intensity [^BufferedImage buffered-image]
   (let [h (.getHeight buffered-image)
         w (.getWidth buffered-image)
         mk #(make-array Double/TYPE w h)
@@ -99,7 +91,7 @@
     (prn "transform max min" max min mm rr mean)
     (dotimes [y h]
       (dotimes [x w]
-        (let [val (double (aget transform x y))
+        (let [val (aget transform x y)
               g (int (if (< val -0.01) 255 0))
               r (if (> val 0.005) 255 0)
               b (if (and (< val 0.005) (> val -0.01)) 255 0)]

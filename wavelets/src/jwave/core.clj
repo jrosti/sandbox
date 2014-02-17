@@ -103,10 +103,10 @@
         width (.getWidth input-image)
         height (.getHeight input-image)
         output-images (map (fn [_] (create-image width height)) (range 3))
-        output-panels (map (partial get-panel) output-images)
+        output-panels (map get-panel output-images)
         input-panel (get-panel input-image)
         rasters (map (fn [img] (.getRaster img)) output-images)]
-    (pmap #(construct-frame width height %) output-panels)
+    (mapv (partial construct-frame width height) output-panels)
     (construct-frame width height input-panel)
     (let [intensities (intensity input-image)
           waves (pmap haar-forward intensities)
@@ -115,4 +115,3 @@
                           (f rasters) width height t))]
       (doall (pmap draw [first second last] waves))          
       (prn "done"))))
-

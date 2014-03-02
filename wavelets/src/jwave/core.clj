@@ -84,6 +84,9 @@
     (aset maxmin 2 (/ (aget maxmin 2) (* w h)))
     (vec maxmin)))
 
+(defn hello [x]
+  (prn x))
+ 
 (defn draw-result [output-panel wr w h transform]
   (let [[max min mean] (amaxmin transform w h)
         mm (double (- min))
@@ -97,7 +100,7 @@
               b (if (and (< val 0.005) (> val -0.01)) 255 0)]
           (.setPixel wr x y (int-array [r g b]))))
         (.repaint output-panel))))
-  
+
 (defn -main [& args]
   (let [input-image (read-buffered-image (first args))
         width (.getWidth input-image)
@@ -115,3 +118,5 @@
                           (f rasters) width height t))]
       (doall (pmap draw [first second last] waves))          
       (prn "done"))))
+
+

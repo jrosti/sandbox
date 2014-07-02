@@ -44,21 +44,12 @@
 (defn blt [a b]
   (if (and a b)
     (< (first a) (first b))
-    (if (not a)
-      true
-      false)))
+    (not a))
 
 (def bt2 [1 [2 nil [3 [4 [5 nil nil] [6 nil nil]] nil]]
       [2 [3 nil [4 [6 nil nil] [5 nil nil]]] nil]])
 
-(defn blt [a b]
-  (if (and a b)
-    (< (first a) (first b))
-    (if (not a)
-      true
-      false)))
-
-(defn sortbtree [tree]
+(defn sort-binary-tree [tree]
   (let [[node left right] tree
         leftsort (if left sortbtree identity) 
         rightsort (if right sortbtree identity)]
@@ -66,7 +57,7 @@
       [node (leftsort left) (rightsort right)]
       [node (rightsort right) (leftsort left)])))
 
-(defn binary-tree-sym [tree] 
+(defn binary-tree-sym? [tree] 
   (letfn [(blt [a b]
             (if (and a b)
               (< (first a) (first b))
@@ -81,7 +72,7 @@
                 [node (leftsort left) (rightsort right)]
                 [node (rightsort right) (leftsort left)])))]
     (let [[node left right] tree]
-      (= (sortbtree left) (sortbtree right)))))
+      (= (sort-binary-tree left) (sort-binary-tree right)))))
           
 (defn mirror [tree]
   (let [[node left right] tree
@@ -89,7 +80,7 @@
         rightmirror (if right mirror identity)]
     [node (rightmirror right) (leftmirror left)]))
     
-(defn binary-tree-sym2 [tree] 
+(defn binary-tree-sym2? [tree] 
   (letfn [(mirror [tree]
             (let [[node left right] tree
                   leftmirror (if left mirror identity) 

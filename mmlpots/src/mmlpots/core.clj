@@ -13,7 +13,7 @@
 
 (defn latlon [trkpt]
   (let [{lat :lat lon :lon} (:attrs trkpt)]
-    [(parse-double lat) (parse-double lon)]))
+    (mapv parse-double [lat lon])))
 
 (defn elevation [trkpt]
   (-> (enlive/select trkpt [:ele enlive/content])
@@ -23,12 +23,6 @@
 (defn parse-track-point [trkpt]
   ((juxt latlon elevation) trkpt))
 
-(defn pt []
-  (->> "test.gpx"
-       parse-gpx
-       track-points
-       first))
-
 (defn pts []
   (->> "test.gpx"
        parse-gpx
@@ -36,14 +30,14 @@
        (map parse-track-point)))
 
 (defn distance [[lat1 lon1] [lat2 lon2]]
-  (let [deg-fn #(* 111111 %)
-        [y1 y2] (map deg-fn [lon1 lon2])
-        [x1 x2] (map (fn [lat] (* (Math/cos (Math/toRadians lat)) (deg-fn lat))) [lat1 lat2])
+  (let [deg-fn #(* 111111.0 %) ; 1 deg is approximately [111111m * cos(lat), 111111m]
+        [y1 y2] (map (fn [lon] (* (Math/cos (Math/toRadians lat1)) (deg-fn lon))) [lon1 lon2])
+        [x1 x2] (map deg-fn [lat1 lat2])
         diffsqr #(let [d (- %1 %2)] (* d d))]
     (Math/sqrt (+ (diffsqr x1 x2) (diffsqr y1 y2)))))
 
-(defn diff-array [pts]
-  (let [p21 (partition 2 1 pts)]
+(defn diff-array [track-points]
+  (let [p21 (partition 2 1 track-points)]
     (map (fn [[[pos1 ele1] [pos2 ele2]]]
            [(distance pos1 pos2) (- ele2 ele1)]) p21)))
 
@@ -51,8 +45,8 @@
   (apply map list matrix))
 
 (defn solve []
-  (let [[elevations distances] (-> (pts) diff-array transpose)]
-    (potts.Elevation/solve (double-array distances) (double-array elevations))))
+  (let [[distances elevations] (mapv double-array (-> (pts) diff-array transpose))]
+    (potts.Elevation/solve distances elevations)))
 
 (defn -main [& args]
   )

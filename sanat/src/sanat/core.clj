@@ -1,19 +1,19 @@
-(require '[clojure.data.json :as json])
-(require '[me.raynes.conch.low-level :as sh])
-(require '[clojure.string :as string])
+(ns sanat.core
+  (:require [clojure.data.json :as json] 
+             [me.raynes.conch.low-level :as sh]
+             [clojure.string :as string]
+             )
+  (:import [org.puimula.libvoikko Voikko TokenType]))
+           ;;[org.tartarus.snowball.ext finnishStemmer]))
 
-(def sanat-frequencies (-> "sanat.json" slurp json/read-str))
-(def freqs (into {} sanat-frequencies))
-(def sanat (mapv first sanat-frequencies))
-
-;; {:user {:plugins [[lein-exec "0.3.4"]]
-;;         :dependencies [[org.puimula.voikko/libvoikko "3.6.1"]
-;;                        [me.raynes/conch "0.8.0"]]
 ;; brew install libvoikko
 ;; wget http://www.puimula.org/htp/testing/voikko-snapshot/dict.zip
 ;; unzip to ~/.voikko
 
-(import '[org.puimula.libvoikko Voikko TokenType])
+(def sanat-frequencies (-> "sanat.json" slurp json/read-str))
+(def freqs (into {} sanat-frequencies))
+(def sanat (map first sanat-frequencies))
+
 
 (def lang "fi")
 (def voikko (Voikko. lang))
@@ -62,4 +62,14 @@
   (let [malaga (sh/proc "malaga" "-m" "sukija/suomi.pro")]
     (future (do (sh/feed-from-string malaga (sanat-str))))
     malaga))
-        
+
+;; TODO: read perusmuodot from mala :out
+
+;; Snowballstemmer
+
+;(def stemmer (finnishStemmer.))
+
+;;(defn stem [word] 
+;;  (.setCurrent stemmer word)
+;;  (.stem stemmer)
+;;  (.getCurrent stemmer))

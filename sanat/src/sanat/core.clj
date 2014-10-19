@@ -3,8 +3,8 @@
              [me.raynes.conch.low-level :as sh]
              [clojure.string :as string]
              )
-  (:import [org.puimula.libvoikko Voikko TokenType]))
-           ;;[org.tartarus.snowball.ext finnishStemmer]))
+  (:import [org.puimula.libvoikko Voikko TokenType]
+           [org.tartarus.snowball.ext finnishStemmer]))
 
 ;; brew install libvoikko
 ;; wget http://www.puimula.org/htp/testing/voikko-snapshot/dict.zip
@@ -63,13 +63,15 @@
     (future (do (sh/feed-from-string malaga (sanat-str))))
     malaga))
 
-;; TODO: read perusmuodot from mala :out
+;; TODO: read perusmuodot from malaga :out
 
 ;; Snowballstemmer
 
-;(def stemmer (finnishStemmer.))
+(def stemmer (finnishStemmer.))
 
-;;(defn stem [word] 
-;;  (.setCurrent stemmer word)
-;;  (.stem stemmer)
-;;  (.getCurrent stemmer))
+(defn stem [word] 
+  (.setCurrent stemmer word)
+  (.stem stemmer)
+  (.getCurrent stemmer))
+
+(def stems (into {} (map #(-> [% (stem %)]) sanat)))

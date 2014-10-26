@@ -2,7 +2,6 @@
 <head>
 </head>
 <body>
-<div>
     <div style="display: none" id="interpretor">
         <p>
             <label for="input">Syöte</label>
@@ -10,10 +9,9 @@
            Tarkoititko:  <span id="output" />
         </p>
     </div>
-</div>
 
 </body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.0/Bacon.min.js"></script>
 <script type='text/javascript'>
 
@@ -75,8 +73,7 @@
             }
         }
         var keyCodeToState = function(val) {
-            var aAsZero = val - 65;
-            return aAsZero;
+            return val - 65;
         }
 
         var viterbi = createViterbi(states, transitions, observationFunction, initialProbabilities);

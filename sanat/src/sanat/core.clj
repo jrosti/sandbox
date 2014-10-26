@@ -58,15 +58,17 @@
 (defn sanat-str [] 
   (->> (take 1000 sanat) (interpose "\n") (apply str)))
 
+;; TODO: read perusmuodot from malaga :out in order to get this work.
 (defn run-malaga []
   (let [malaga (sh/proc "malaga" "-m" "sukija/suomi.pro")]
     (future (do (sh/feed-from-string malaga (sanat-str))))
     malaga))
 
-;; TODO: read perusmuodot from malaga :out
 
-;; Snowballstemmer
-
+;; Snowballstemmer http://http://snowball.tartarus.org/
+;; http://snowball.tartarus.org/dist/libstemmer_java.tgz
+;;
+;; NOTE: You need to fix compilation failures before use. 
 (def stemmer (finnishStemmer.))
 
 (defn stem [word] 

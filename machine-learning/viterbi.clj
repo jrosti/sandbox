@@ -21,11 +21,11 @@
                          [i (+ (viterbi i) 
                                (Math/log (get-in transitions [i j]))
                                (Math/log (observation-fn observation j)))])
-            survivor (apply max-key second candidates)]
+            [state state-probabilities] (apply max-key second candidates)]
         (recur (inc j) 
-               (conj! new-viterbi (second survivor))
+               (conj! new-viterbi state-probabilites)
                (conj! new-path 
-                     (conj (path (first survivor)) j)))))))
+                     (conj (path state) j)))))))
 
 (defn run []
   (reduce apply-viterbi initial-state 
